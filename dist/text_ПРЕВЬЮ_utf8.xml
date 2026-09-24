@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-16"?>
+<root>
+	<config>
+		<tc_config>Настройки</tc_config>
+		<tc_exit>Выход</tc_exit>
+		<tc_web></tc_web>
+		<tc_ok>OK</tc_ok>
+		<tc_restore>Сброс</tc_restore>
+		<tc_cancel>Отмена</tc_cancel>
+		<tc_apply>Сохранить</tc_apply>
+		<tc_tap_tips>Чтобы поработать с драйвером, переключи клавиатуру в режим Windows: FN+W</tc_tap_tips>
+
+		<tc_update1>Есть новая прошивка. Обновить?
+(Не закрывай окно и не отключай клавиатуру. После — переподключи кабель)</tc_update1>
+		<tc_update2>Найдена новая версия драйвера. Обновить?</tc_update2>
+		<tc_update3>Уже стоит последняя версия</tc_update3>
+		<tc_update4>Идёт загрузка</tc_update4>
+		<tc_update5>Ошибка обновления</tc_update5>
+		<tc_update6>Обновление прошивки</tc_update6>
+		<tc_update7>Обновление драйвера</tc_update7>
+		<tc_update8>Сначала подключи клавиатуру проводом (режим USB)</tc_update8>
+
+		<tc_macro_msg1>Новая папка</tc_macro_msg1>
+		<tc_macro_msg2>Новый макрос</tc_macro_msg2>
+		<tc_macro_msg3>Введи название</tc_macro_msg3>
+		<tc_macro_msg4>Запись</tc_macro_msg4>
+		<tc_macro_msg5>Остановить</tc_macro_msg5>
+		<tc_macro_msg6>Удалить</tc_macro_msg6>
+		<tc_macro_msg7>Клавиша</tc_macro_msg7>
+		<tc_macro_msg8>Изменить</tc_macro_msg8>
+		<tc_macro_msg9>Панель макросов</tc_macro_msg9>
+		<tc_macro_msg10>Начало</tc_macro_msg10>
+		<tc_macro_msg11>Время удержания</tc_macro_msg11>
+		<tc_macro_msg12>Конец</tc_macro_msg12>
+		<tc_macro_msg13>Масштаб</tc_macro_msg13>
+		<tc_macro_msg14>Просмотр</tc_macro_msg14>
+		<tc_macro_msg15>Макросов пока нет — нажми, чтобы создать</tc_macro_msg15>
+		<tc_macro_msg16>Вставить</tc_macro_msg16>
+		<tc_macro_msg17>Число повторов</tc_macro_msg17>
+		<tc_macro_msg18>Повторять, пока держишь клавишу</tc_macro_msg18>
+		<tc_macro_msg19>Повторять, пока не нажмёшь любую клавишу</tc_macro_msg19>
+		<tc_macro_msg20>Сдвиг по X</tc_macro_msg20>
+		<tc_macro_msg21>Сдвиг по Y</tc_macro_msg21>
+		<tc_macro_msg22>Пауза</tc_macro_msg22>
+		<tc_macro_msg23>Двойной клик — правка шага</tc_macro_msg23>
+		<tc_macro_msg24>Время старта не должно повторяться у разных нажатий</tc_macro_msg24>
+
+		<tc_PL>Играть / пауза</tc_PL>
+		<tc_stop>Стоп</tc_stop>
+		<tc_pre_media>Трек назад</tc_pre_media>
+		<tc_next_media>Трек вперёд</tc_next_media>
+		<tc_vol_up>Громкость +</tc_vol_up>
+		<tc_vol_dw>Громкость −</tc_vol_dw>
+		<tc_mute>Без звука</tc_mute>
+		<tc_briup>Яркость экрана +</tc_briup>
+		<tc_bridn>Яркость экрана −</tc_bridn>
+
+		<tc_kbmedia_mail>Почта</tc_kbmedia_mail>
+		<tc_kbmedia_main>Браузер</tc_kbmedia_main>
+		<tc_kbmedia_explore>Этот компьютер</tc_kbmedia_explore>
+		<tc_kbmedia_cal>Калькулятор</tc_kbmedia_cal>
+		<tc_kbmedia_favor>Избранное</tc_kbmedia_favor>
+		<tc_kbmedia_msel>Плеер</tc_kbmedia_msel>
+
+		<tc_click>ЛКМ</tc_click>
+		<tc_menu>ПКМ</tc_menu>
+		<tc_middle>СКМ</tc_middle>
+		<tc_forward>Вперёд</tc_forward>
+		<tc_back>Назад</tc_back>
+		<tc_scrollup>Колесо вверх</tc_scrollup>
+		<tc_scrolldown>Колесо вниз</tc_scrolldown>
+		<tc_dclick>Двойной клик</tc_dclick>
+		<tc_mac_def>Макрос</tc_mac_def>
+		<tc_key_off>Отключить</tc_key_off>
+
+		<tc_msg1>Общие</tc_msg1>
+		<tc_msg2>Модель</tc_msg2>
+		<tc_msg3>Версия прошивки</tc_msg3>
+		<tc_msg4>Версия программы</tc_msg4>
+		<tc_msg5>Заряд</tc_msg5>
+		<tc_msg6>По нажатию крестика</tc_msg6>
+		<tc_msg7>Выход</tc_msg7>
+		<tc_msg8>Свернуть в трей</tc_msg8>
+		<tc_msg9>Устройство</tc_msg9>
+		<tc_msg10>Язык</tc_msg10>
+		<tc_msg11>Запуск с Windows</tc_msg11>
+		<tc_msg12>Вкл.</tc_msg12>
+		<tc_msg13>Выкл.</tc_msg13>
+		<tc_msg14>Свои цвета</tc_msg14>
+		<tc_msg15>Добавить</tc_msg15>
+		<tc_msg16>Удалить?</tc_msg16>
+		<tc_msg17>Вернуть заводские настройки?</tc_msg17>
+		<tc_msg18>Назначение клавиш</tc_msg18>
+		<tc_msg19>Достигнут максимум макросов</tc_msg19>
+		<tc_msg20>Проверять обновления</tc_msg20>
+		<tc_msg21>Вернёт клавиатуру к заводским настройкам</tc_msg21>
+		<tc_msg22>Яркость</tc_msg22>
+		<tc_msg23>Скорость</tc_msg23>
+		<tc_msg24>Цвет</tc_msg24>
+		<tc_msg25>Все цвета</tc_msg25>
+		<tc_msg26>Профиль</tc_msg26>
+		<tc_msg27>Профиль</tc_msg27>
+		<tc_msg28>Команды</tc_msg28>
+		<tc_msg29>Клавиши</tc_msg29>
+		<tc_msg30>Мышь</tc_msg30>
+		<tc_msg31>Медиа</tc_msg31>
+		<tc_msg32>Комбинация</tc_msg32>
+		<tc_msg33>Нажми одну клавишу или комбинацию</tc_msg33>
+		<tc_msg34>В радиорежиме клавиатура засыпает, если её не трогать заданное время</tc_msg34>
+		<tc_msg35>Ищу клавиатуру. Подключи её; по радиоканалу — нажми любую клавишу</tc_msg35>
+		<tc_msg36>с</tc_msg36>
+		<tc_msg37>мин</tc_msg37>
+		<tc_msg38>мс</tc_msg38>
+		<tc_msg39>Переименовать</tc_msg39>
+		<tc_msg40>Импорт</tc_msg40>
+		<tc_msg41>Экспорт</tc_msg41>
+		<tc_msg42>Копировать</tc_msg42>
+		<tc_msg43>Нажми нужную клавишу</tc_msg43>
+		<tc_msg44>Клавиатура уснула или отключена</tc_msg44>
+		<tc_msg45>Об устройстве</tc_msg45>
+		<tc_msg46>Язык</tc_msg46>
+		<tc_msg47>Запуск</tc_msg47>
+		<tc_msg48>Выход</tc_msg48>
+		<tc_msg49>Сон</tc_msg49>
+		<tc_msg50>Сброс</tc_msg50>
+		<tc_msg51>Обновление</tc_msg51>
+		<tc_msg52>Подожди, обновляю.....</tc_msg52>
+		<tc_msg53>Не вышло: клавиатура занята или помехи. Попробуй ещё раз</tc_msg53>
+		<tc_msg54>Задержка срабатывания</tc_msg54>
+		<tc_msg55>Уровень</tc_msg55>
+
+		<tc_cmd1>Закрыть окно</tc_cmd1>
+		<tc_cmd2>Заблокировать ПК</tc_cmd2>
+		<tc_cmd3>Выполнить команду</tc_cmd3>
+		<tc_cmd4>Свернуть всё (рабочий стол)</tc_cmd4>
+		<tc_cmd5>Приблизить</tc_cmd5>
+		<tc_cmd6>Отдалить</tc_cmd6>
+		<tc_cmd7>Диспетчер задач</tc_cmd7>
+		<tc_cmd8>Отменить</tc_cmd8>
+		<tc_cmd9>Сохранить</tc_cmd9>
+		<tc_cmd10></tc_cmd10>
+		<tc_cmd11>Блокировать Win</tc_cmd11>
+		<tc_cmd12>Заблокировать клавиши</tc_cmd12>
+		<tc_cmd13>Сброс клавиатуры</tc_cmd13>
+
+		<tc_ms1>Ступеней DPI</tc_ms1>
+		<tc_ms2>Зафиксировать DPI</tc_ms2>
+		<tc_ms3>Тройной клик</tc_ms3>
+		<tc_ms4>Свет вкл/выкл</tc_ms4>
+		<tc_ms5>Сменить эффект</tc_ms5>
+		<tc_ms6>Сменить частоту опроса</tc_ms6>
+		<tc_ms7>Сменить режим</tc_ms7>
+		<tc_ms8>Цикл DPI</tc_ms8>
+		<tc_ms9>Клавиша огня</tc_ms9>
+		<tc_ms10>Повторов за нажатие ( 0-255 )</tc_ms10>
+		<tc_ms11>Пауза между ними ( 5-255 )</tc_ms11>
+		<tc_ms12>Меньше пауза — быстрее очередь. 0 = жмёт, пока держишь</tc_ms12>
+		<tc_ms13>Частота опроса</tc_ms13>
+		<tc_ms14>X и Y раздельно</tc_ms14>
+		<tc_ms15>Оставь хотя бы одной клавише функцию «ЛКМ»</tc_ms15>
+		<tc_ms16>Подсветка</tc_ms16>
+		<tc_ms17>Направление</tc_ms17>
+		<tc_ms18>Чувствительность мыши</tc_ms18>
+		<tc_ms19>Плавная точность указателя</tc_ms19>
+		<tc_ms20>Скорость прокрутки</tc_ms20>
+		<tc_ms21>Прокрутка по экрану</tc_ms21>
+		<tc_ms22>Скорость двойного клика</tc_ms22>
+		<tc_ms23>Задержка срабатывания</tc_ms23>
+		<tc_ms24></tc_ms24>
+
+		<tc_ms_led1>Бегущие цвета</tc_ms_led1>
+		<tc_ms_led2>Ровный свет</tc_ms_led2>
+		<tc_ms_led3>Дыхание</tc_ms_led3>
+		<tc_ms_led4>Цветной шлейф</tc_ms_led4>
+		<tc_ms_led5>Неон</tc_ms_led5>
+		<tc_ms_led6>Все цвета ровно</tc_ms_led6>
+		<tc_ms_led7>Мигание</tc_ms_led7>
+		<tc_ms_led8>Звёзды</tc_ms_led8>
+		<tc_ms_led9>Волна</tc_ms_led9>
+		<tc_ms_led10>Свет выкл.</tc_ms_led10>
+
+		<tc_kb1>Эффекты подсветки</tc_kb1>
+		<tc_kb2>Сначала выбери клавишу</tc_kb2>
+		<tc_kb3>Группы цветов</tc_kb3>
+		<tc_kb4>Зажми ЛКМ и протяни рамку — выделишь много клавиш</tc_kb4>
+		<tc_kb5>Базовый</tc_kb5>
+		<tc_kb6>FN1</tc_kb6>
+		<tc_kb7>FN2</tc_kb7>
+		<tc_kb8>Клик</tc_kb8>
+		<tc_kb9>По умолч.</tc_kb9>
+		<tc_kb10>Текущий</tc_kb10>
+		<tc_kb11>Функция клавиши не выбрана</tc_kb11>
+		<tc_kb12>Чувствительность</tc_kb12>
+		<tc_kb13>Вернуть клавише заводское</tc_kb13>
+		<tc_kb14>Определять систему самой</tc_kb14>
+
+		<tc_kb_led1>Ровный свет </tc_kb_led1>
+		<tc_kb_led2>Дыхание </tc_kb_led2>
+		<tc_kb_led3>Радуга </tc_kb_led3>
+		<tc_kb_led4>Вспышка по нажатию </tc_kb_led4>
+		<tc_kb_led5>Капли дождя</tc_kb_led5>
+		<tc_kb_led6>Радужное колесо</tc_kb_led6>
+		<tc_kb_led7>Круги по воде</tc_kb_led7>
+		<tc_kb_led8>Звёзды</tc_kb_led8>
+		<tc_kb_led9>Тень исчезает</tc_kb_led9>
+		<tc_kb_led10>Змейка</tc_kb_led10>
+		<tc_kb_led11>Неоновый поток</tc_kb_led11>
+		<tc_kb_led12>Отклик</tc_kb_led12>
+		<tc_kb_led13>Синусоида</tc_kb_led13>
+		<tc_kb_led14>Сканер влево-вправо</tc_kb_led14>
+		<tc_kb_led15>Вертушка</tc_kb_led15>
+		<tc_kb_led16>Радужный водопад</tc_kb_led16>
+		<tc_kb_led17>Цветение</tc_kb_led17>
+		<tc_kb_led18>Вихрь</tc_kb_led18>
+		<tc_kb_led19>Свой режим</tc_kb_led19>
+		<tc_kb_led20>Выкл.</tc_kb_led20>
+		<tc_kb_led21></tc_kb_led21>
+		<tc_kb_led22></tc_kb_led22>
+
+		<tc_game1>FN+1</tc_game1>
+		<tc_game2>FN+2</tc_game2>
+		<tc_game3>FN+3</tc_game3>
+		<tc_game4>FN+4</tc_game4>
+		<tc_game5>FN+5</tc_game5>
+
+		<tc_music1>Музыка</tc_music1>
+		<tc_music2>Усиление</tc_music2>
+		<tc_music3>Подсветка двигается в такт звуку системы</tc_music3>
+		<tc_music4>Один цвет</tc_music4>
+		<tc_music5>Все цвета</tc_music5>
+		<tc_music6>Вкл.</tc_music6>
+		<tc_music7>Выкл.</tc_music7>
+		<tc_music8>Эффект</tc_music8>
+		<tc_music9>Плавность</tc_music9>
+		<tc_music10></tc_music10>
+
+		<tc_music_mode1>Лёгкий танец — спокойный</tc_music_mode1>
+		<tc_music_mode2>Ослепительно — рок</tc_music_mode2>
+		<tc_music_mode3>Снег в облаках — обычный</tc_music_mode3>
+		<tc_music_mode4>Поле света — голос</tc_music_mode4>
+		<tc_music_mode5>Ручеёк — обычный</tc_music_mode5>
+		<tc_music_mode6>Цветение — драйв</tc_music_mode6>
+		<tc_music_mode7>Жемчуг по тарелке — рок</tc_music_mode7>
+		<tc_music_mode8>Облака за луной — драйв</tc_music_mode8>
+		<tc_music_mode9>Горная река — обычный</tc_music_mode9>
+		<tc_music_mode10>Дождь нитями — обычный</tc_music_mode10>
+		<tc_music_mode11>Бегущий тест</tc_music_mode11>
+
+		<tc_yun1>Центр обмена</tc_yun1>
+		<tc_yun2>Название файла</tc_yun2>
+		<tc_yun3>Описание файла</tc_yun3>
+		<tc_yun4>Программа</tc_yun4>
+		<tc_yun5>Пользователь</tc_yun5>
+		<tc_yun6>Дата</tc_yun6>
+		<tc_yun7>Скачать</tc_yun7>
+		<tc_yun8>Выложить</tc_yun8>
+		<tc_yun9>Скачано. Открыть сейчас?</tc_yun9>
+		<tc_yun10>Выложить этот профиль в облако</tc_yun10>
+		<tc_yun11>Скачано. Открыть сейчас?</tc_yun11>
+		<tc_yun12>Войди в аккаунт</tc_yun12>
+		<tc_yun13>Вход</tc_yun13>
+		<tc_yun14>Выйти</tc_yun14>
+		<tc_yun15>Регистрация</tc_yun15>
+		<tc_yun16>Имя пользователя</tc_yun16>
+		<tc_yun17>Пароль</tc_yun17>
+		<tc_yun18>Повтори пароль</tc_yun18>
+		<tc_yun19>Почта</tc_yun19>
+		<tc_yun20>Пол</tc_yun20>
+		<tc_yun21>Мужской</tc_yun21>
+		<tc_yun22>Женский</tc_yun22>
+		<tc_yun23>Такое имя уже занято</tc_yun23>
+		<tc_yun24>Такая почта уже зарегистрирована</tc_yun24>
+		<tc_yun25>Проверь адрес почты</tc_yun25>
+		<tc_yun26>Пароли не совпадают</tc_yun26>
+		<tc_yun27>Пароль должен быть 6–20 символов</tc_yun27>
+		<tc_yun28>Сервер не отвечает или нет сети</tc_yun28>
+		<tc_yun29>Неверное имя или пароль</tc_yun29>
+		<tc_yun30>Готово, ты зарегистрирован</tc_yun30>
+		<tc_yun31>Аккаунта нет? Создай сейчас</tc_yun31>
+		<tc_yun32>Запоминать меня</tc_yun32>
+		<tc_yun33>Выложить этот профиль в облако</tc_yun33>
+		<tc_yun34>Отправлено</tc_yun34>
+		<tc_yun35>Мои профили в облаке</tc_yun35>
+		<tc_yun36>Устройство</tc_yun36>
+		<tc_yun37>Личный кабинет</tc_yun37>
+		<tc_yun38>Уже есть профиль с таким именем. Перезаписать?</tc_yun38>
+		<tc_yun39>Идеи и жалобы</tc_yun39>
+		<tc_yun40>Как с тобой связаться</tc_yun40>
+		<tc_yun41>Отправить</tc_yun41>
+		<tc_yun42>Сменить пароль</tc_yun42>
+		<tc_yun43>Введи старый пароль</tc_yun43>
+		<tc_yun44>Введи новый пароль</tc_yun44>
+		<tc_yun45>Повтори новый пароль</tc_yun45>
+		<tc_yun46>Пароль изменён</tc_yun46>
+		<tc_yun47>Этот профиль не подходит к текущей клавиатуре</tc_yun47>
+		<tc_yun48></tc_yun48>
+	</config>
+</root>
