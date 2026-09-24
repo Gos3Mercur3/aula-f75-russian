@@ -1,0 +1,7 @@
+*.bat binary
+*.xml binary
+*.zip binary
+*.ps1 text eol=crlf
+*.md text eol=lf
+*.json text eol=lf
+*.py text eol=lf
