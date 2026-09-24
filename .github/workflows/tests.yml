@@ -1,0 +1,22 @@
+name: tests
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Reference + rebuild check
+        run: |
+          python3 tools/make_reference.py
+          python3 tools/build_dist.py --check
+      - name: 25 checks
+        run: python3 tools/check_repo.py
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TESTS
+          path: TESTS.md
