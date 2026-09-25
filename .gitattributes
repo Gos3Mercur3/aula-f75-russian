@@ -1,7 +1,15 @@
+# бинарные для нас файлы: git обязан хранить их побайтово (иначе CRLF съедается
+# и батник на Windows перестаёт запускаться, а XML теряет UTF-16 BOM)
 *.bat binary
 *.xml binary
 *.zip binary
+tools/publish.bat binary
+
+# .ps1 ниже тоже должен быть побайтовым: правило `*.ps1 text eol=crlf` иначе
+# перекроет macro-`binary` (в .gitattributes поздняя строка важнее ранней)
 *.ps1 text eol=crlf
+tools/publish.ps1 -text -diff
+
 *.md text eol=lf
 *.json text eol=lf
 *.py text eol=lf

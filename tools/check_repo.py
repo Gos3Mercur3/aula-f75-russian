@@ -598,6 +598,78 @@ def test_bat_real_cmd():
         return msg + '; for /d не эмулируется Wine — покрыто симуляциями'
 
 
+@t('выкладка: publish.bat / .ps1 / .sh целы; --check строгий; файлы == вывод генератора')
+def test_publish_scripts():
+    """`tools/make_publish.py` — источник истины для трёх скриптов выкладки.
+    Проверяем то, что реально ломает запуск: CRLF и чистая ASCII у .bat,
+    баланс скобок и param-блок у .ps1, `bash -n` у .sh, и что повторная генерация
+    ничего не меняет (иначе файлы в репо отстали от генератора)."""
+    t = os.path.join(HERE, 'make_publish.py')
+    assert os.path.exists(t), 'нет tools/make_publish.py — генератор должен быть в репо'
+
+    bat = os.path.join(HERE, 'publish.bat')
+    raw = read_bytes(bat)
+    assert raw.count(b'\r\n') and raw.count(b'\n') == raw.count(b'\r\n'), 'publish.bat: не CRLF'
+    assert not [x for x in raw if x > 127], 'publish.bat: не-ASCII — cmd.exe его испортит'
+    assert b'powershell' in raw and b'-ExecutionPolicy Bypass' in raw, 'publish.bat: нет вызова powershell'
+    assert b'publish.ps1' in raw and b'if not exist' in raw, 'publish.bat: нет проверки наличия .ps1'
+
+    ps1_raw = read_bytes(os.path.join(HERE, 'publish.ps1'))
+    assert ps1_raw.count(b'\r\n') and ps1_raw.count(b'\n') == ps1_raw.count(b'\r\n'), (
+        'publish.ps1: не CRLF — Windows PowerShell такое открывает, но git и редакторы '
+        'перемешают переводы; генератор обязан писать CRLF для всех .bat/.ps1')
+    ps1 = ps1_raw.decode('utf-8')
+    assert ps1.startswith('#requires'), 'publish.ps1: нет строки #requires'
+    assert 'param(' in ps1, 'publish.ps1: нет блока param'
+    assert ps1.count('{') == ps1.count('}'), f"publish.ps1: {ps1.count('{')} '{{' против {ps1.count('}')} '}}'"
+    for need in ('ConvertTo-Json', 'git/trees', 'releases', 'browser_download_url', 'DryRun'):
+        assert need in ps1, f'publish.ps1: не найдено {need}'
+    assert 'ReadAllBytes' in ps1, 'publish.ps1: ассет надо читать байтами, не текстом'
+
+    sh = os.path.join(HERE, 'publish.sh')
+    r = subprocess.run(['bash', '-n', sh], capture_output=True)
+    assert r.returncode == 0, 'publish.sh: bash -n нашёл ошибку: ' + r.stderr.decode()[:120]
+    s_txt = io.open(sh, encoding='utf-8').read()
+    assert 'base_tree' in s_txt, 'publish.sh: коммит должен строиться поверх HEAD, иначе main не обновится'
+    assert 'git/refs/heads/main' in s_txt, 'publish.sh: нет обновления refs — пуш ушёл бы в никуда'
+    assert 'set -euo pipefail' in s_txt, 'publish.sh: нет строгого режима'
+    assert (os.stat(sh).st_mode & 0o111), 'publish.sh: не исполняемый (нужен +x в репо)'
+    sh_raw = read_bytes(sh)
+    assert sh_raw.count(b'\r') == 0, 'publish.sh: внутри CR — bash на macOS/Linux споткнётся о \r'
+
+    # 1) `--check` обязан быть строгим: rc=0 на целом дереве. Проверяем именно rc,
+    #    потому что «сгенерируй и сравни до/после» ничего не ловит у генератора,
+    #    который сам себя чинит (именно так тест проглядел NameError в самом make_publish).
+    r2 = subprocess.run([sys.executable, t, '--check'], capture_output=True, cwd=ROOT)
+    assert r2.returncode == 0, (
+        'make_publish.py --check вернул ' + str(r2.returncode) + ': ' + (r2.stderr or r2.stdout).decode()[:200])
+    assert 'не отстал' in r2.stdout.decode('utf-8', 'replace'), 'make_publish.py --check не печатает сверку'
+
+    # 2) а на испорченном обязан покраснеть — иначе проверка в CI декоративная
+    victim = os.path.join(HERE, 'publish.bat')
+    keep = read_bytes(victim)
+    try:
+        with open(victim, 'ab') as fh:
+            fh.write(b'\r\nrem PORTA\r\n')
+        r3 = subprocess.run([sys.executable, t, '--check'], capture_output=True, cwd=ROOT)
+        assert r3.returncode != 0, (
+            'make_publish.py --check не заметил расхождение и вернул 0 — '
+            'в GitHub Actions эта проверка ничего не значит')
+        assert 'ОТСТАЛ' in r3.stdout.decode('utf-8', 'replace'), '--check должен сказать, какой файл отстал'
+    finally:
+        io.open(victim, 'wb').write(keep)
+
+    # 3) файлы на диске равны тому, что генерирует скрипт (сверка с ожиданием, не «до/после»)
+    sys.path.insert(0, HERE)
+    import make_publish as _mp
+    for fname, want_nl in (('publish.ps1', b'\r\n'), ('publish.bat', b'\r\n'), ('publish.sh', b'\n')):
+        body = {'publish.ps1': _mp.PS1, 'publish.bat': _mp.BAT, 'publish.sh': _mp.SH}[fname]
+        want = body.replace('\r\n', '\n').replace('\n', want_nl.decode()).encode('utf-8')
+        got = read_bytes(os.path.join(HERE, fname))
+        assert got == want, f'{fname}: на диске не то, что генерирует make_publish.py ({len(got)} против {len(want)} байт)'
+    return '3 скрипта целы, --check строгий, файлы == вывод генератора'
+
+
 # ---------------------------------------------------------------------- runner
 def main():
     for _name, fn in SUITE:
