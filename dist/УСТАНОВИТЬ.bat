@@ -13,11 +13,6 @@ rem ---- файл перевода должен лежать рядом с батником ----
 set "SRC=%~dp0text_ru.xml"
 if not exist "%SRC%" set "SRC=%~dp0AULA_F75_RU\text_ru.xml"
 if not exist "%SRC%" goto :nosrc
-for %%B in ("%~1") do echo    Text\%%~nxB\text.xml  %%~zB байт
-goto :eof
-
-:nosrc
-
 rem ---- ищем папку программы (порядок = приоритет) ----
 set "APP="
 if exist "C:\Program Files (x86)\AULA\F75\Text\" set "APP=C:\Program Files (x86)\AULA\F75"
@@ -42,8 +37,7 @@ set /a N=0
 for /d %%D in ("!APP!\Text\*") do call :one "%%D"
 if !N! equ 0 (
   echo  В подпапках языка text.xml не нашёлся - пишу Text\text.xml
-  copy /y "%SRC%" "!APP!\Text\text.xml" >nul
-  set /a N=1
+  call :one "!APP!\Text"
 )
 goto :report
 

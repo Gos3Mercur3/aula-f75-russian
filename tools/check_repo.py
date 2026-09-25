@@ -390,9 +390,17 @@ def test_no_lang_folders():
             if os.path.exists(os.path.join(app, 'Text', d, 'text.xml')):
                 n += 1
         assert n == 0
-        shutil.copy2(os.path.join(DIST, 'text_ru.xml'), os.path.join(app, 'Text', 'text.xml'))
-        assert os.path.exists(os.path.join(app, 'Text', 'text.xml'))
-    return 'ветка exists и она рабочая'
+        p = os.path.join(app, 'Text', 'text.xml')
+        with io.open(p, 'w', encoding='utf-16', newline='') as f:   # «оригинал» на чистой машине
+            f.write('<?xml version="1.0" encoding="utf-16"?>\r\n<root>\r\n\t<tc_apply>Save</tc_apply>\r\n</root>\r\n')
+        orig = read_bytes(p)
+        shutil.copy2(p, p + '.bak')                                  # ровно то, что делает :one
+        shutil.copy2(os.path.join(DIST, 'text_ru.xml'), p)
+        assert os.path.getsize(p) == os.path.getsize(os.path.join(DIST, 'text_ru.xml')), 'Text\\text.xml не записан'
+        assert read_bytes(p + '.bak') == orig, 'в ветке без подпапок языка бэкапа нет -> undo.bat нечем откатывать'
+    assert re.search(r'if !N! equ 0 \(\r?\n\s*echo[^\n]*\r?\n\s*call :one', text), (
+        'ветка «подпапок языка нет» не вызывает :one — значит пишет без бэкапа')
+    return 'ветка exists: вызов :one, есть бэкап, размер совпадает'
 
 
 # --------------------------------------------------------------- архив / доки
@@ -458,6 +466,136 @@ def test_docs_paths():
             continue                                   # это про папку программы, не про архив
         assert base in have or base == 'AULA_F75_RU_installer.zip', f'README ссылается на {base}, а его нет в dist/'
     return 'ссылки на файлы валидны'
+
+
+@t('батники: управляющий поток не обрывается до основной логики (ловит "тихий exit 0")')
+def test_bat_flow():
+    """cmd.exe выполняет файл построчно; `goto :eof` / `exit /b` на верхнем уровне
+    заканчивает скрипт. Если такое стоит до основной логики — установщик молча
+    ничего не делает и возвращает код 0 (это и уронило live-тест на cmd.exe).
+    Плюс: метка-подпрограмма в первых строках = мёртвый код, признак вставки не туда."""
+    for name in ('УСТАНОВИТЬ.bat', 'undo.bat'):
+        lines = strip_echoes(bat_lines(os.path.join(DIST, name)))
+        body = [l for l in lines if l.strip()]
+        first_label = next((i for i, l in enumerate(body) if re.match(r'^:\w+\s*$', l)), None)
+        assert first_label is None or first_label >= 6, (
+            f'{name}: метка уже на строке {first_label+1} — до неё основной логики нет, '
+            f'скрипт завершится раньше, чем что-нибудь сделает')
+        depth = 0
+        for i, l in enumerate(body):
+            was_in_block = depth > 0
+            depth += l.count('(') - l.count(')')
+            depth = max(depth, 0)
+            if was_in_block or depth:
+                continue                                   # внутри if ( ... ) — это не верхний уровень
+            low = l.strip().lower()
+            if low == 'goto :eof' or low.startswith('exit /b'):
+                assert i >= 6, (
+                    f'{name}:{i+1} `{l.strip()}` на верхнем уровне слишком рано — '
+                    f'весь код ниже недостижим (cmd.exe выйдет с кодом 0, ничего не установив)')
+        # осиротевшие строки подпрограммы в начале: обращение к %~1 вне тела метки
+        head = '\n'.join(body[:6])
+        assert '%~1' not in head and '%~dp0' not in head.replace('set "SRC=%~dp0', ''), (
+            f'{name}: в заголовке остались обращения к %~1 — фрагмент подпрограммы не на своём месте')
+    return 'ранних exit/goto :eof нет, мёртвых вставок в заголовке нет'
+
+
+@t('батники: установщик и откат ищут программу по ОДНОМУ списку папок')
+def test_bat_app_lists():
+    """undo.bat когда-то искал папку своей строкой `for %%P in (...) do if exist %%P\\Text\\`
+    — и не находил её из-за пути с пробелом и скобками. Тест не даёт спискам разъезжаться."""
+    def cands(name):
+        out = []
+        for l in bat_lines(os.path.join(DIST, name)):
+            m = re.search(r'if exist "([^"]+\\Text\\?)"', l)
+            if m:
+                out.append(m.group(1).rstrip('\\'))
+        return out
+    a, b = cands('УСТАНОВИТЬ.bat'), cands('undo.bat')
+    assert a and b, f'не смог разобрать списки: установщик {a}, откат {b}'
+    assert len(a) >= 6, 'установщик должен проверять несколько типовых путей, а их %d' % len(a)
+    for l in bat_lines(os.path.join(DIST, 'undo.bat')):
+        if 'for %%P in' in l and 'if exist %%P' in l:
+            raise AssertionError(r'в откате остался некавыченный if exist %%P\Text\ — путь с пробелом не найдётся')
+    assert a == b, f'списки разъехались: установщик {a}, откат {b}'
+    return f'оба батника проверяют одни и те же {len(a)} путей'
+
+
+@t('батники: живой cmd.exe (Wine), если он есть в окружении')
+def test_bat_real_cmd():
+    """Прогон .bat в НАСТОЯЩЕМ cmd.exe (Wine). Проверяем не текст консоли (Wine печатает
+    cp866 как cp437 и кириллица в выводе мусорная), а состояние диска и коды возврата —
+    это от кодировки не зависит. Перечисление `for /d ... in ("…\\*")` Wine не эмулирует,
+    поэтому покрывается путь Text\\text.xml и прямые вызовы подпрограмм; цикл по языкам
+    покрыт симуляциями выше. Wine нет -> тест пропускается (в CI на ubuntu его нет)."""
+    import subprocess
+    wine = shutil.which('wine')
+    if not wine:
+        return 'ПРОПУСК: wine не установлен (живой cmd.exe в этом окружении недоступен)'
+    orig = b'\xff\xfe' + ('<?xml version="1.0"?><root><tc_apply>Apply</tc_apply></root>\r\n').encode('utf-16-le')
+    want = os.path.getsize(os.path.join(DIST, 'text_ru.xml'))
+    env0 = dict(os.environ, WINEDEBUG='-all', DISPLAY='')
+    with tempfile.TemporaryDirectory() as tmp:
+        flat = os.path.join(tmp, 'flat')
+        os.makedirs(flat)
+        for f in ('УСТАНОВИТЬ.bat', 'undo.bat', 'text_ru.xml'):
+            shutil.copy2(os.path.join(DIST, f), os.path.join(flat, f))
+        # прогреваем и копируем готовый префикс жёсткими ссылками: иначе первый
+        # wineboot --init на свежем префиксе жрёт 700 МБ и минуту времени
+        src_pfx = os.environ.get('WINEPREFIX') or os.path.expanduser('~/.wine')
+        pfx = os.path.join(tmp, 'pfx')
+        if os.path.exists(os.path.join(src_pfx, 'drive_c', 'windows', 'system32', 'cmd.exe')):
+            try:
+                subprocess.run(['cp', '-al', src_pfx, pfx], check=True, timeout=180)
+            except Exception:
+                pfx = src_pfx
+        else:
+            pfx = src_pfx
+        env = dict(env0, WINEPREFIX=pfx)
+        app = os.path.join(pfx, 'drive_c', 'Program Files (x86)', 'AULA', 'F75')
+        text = os.path.join(app, 'Text')
+
+        def run_bat(bat, cwd, inp=b'\r\n'):
+            r = subprocess.run([wine, 'cmd', '/c', os.path.join(cwd, bat)], env=env, cwd=cwd,
+                               input=inp, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                               timeout=180)
+            return r.returncode, r.stdout
+
+        def check(name, ok):
+            checks.append((name, bool(ok)))
+
+        checks = []
+        try:
+            os.makedirs(text, exist_ok=True)
+            io.open(os.path.join(text, 'text.xml'), 'wb').write(orig)
+            code, _ = run_bat('УСТАНОВИТЬ.bat', flat, b'n\r\n\r\n')
+            cur = io.open(os.path.join(text, 'text.xml'), 'rb').read()
+            bak = os.path.join(text, 'text.xml.bak')
+            check('батник дошёл до записи (не ранний выход с кодом 0)', len(cur) == want)
+            check('код возврата 0', code == 0)
+            check('бэкап оригинала создан до записи',
+                  os.path.exists(bak) and io.open(bak, 'rb').read() == orig)
+            code2, _ = run_bat('УСТАНОВИТЬ.bat', flat, b'n\r\n\r\n')
+            check('повторный запуск не затёр бэкап',
+                  io.open(bak, 'rb').read() == orig if os.path.exists(bak) else False)
+            code3, _ = run_bat('undo.bat', flat)
+            check('undo.bat нашёл папку и вернул оригинал',
+                  io.open(os.path.join(text, 'text.xml'), 'rb').read() == orig)
+            check('undo.bat перенёс .bak (его больше нет)', not os.path.exists(bak))
+            check('undo.bat отработал с кодом 0', code3 == 0)
+            broke = os.path.join(tmp, 'broke')
+            os.makedirs(broke)
+            shutil.copy2(os.path.join(DIST, 'УСТАНОВИТЬ.bat'), os.path.join(broke, 'УСТАНОВИТЬ.bat'))
+            io.open(os.path.join(text, 'text.xml'), 'wb').write(orig)
+            code4, _ = run_bat('УСТАНОВИТЬ.bat', broke)
+            check('без text_ru.xml — код 1 и файлы не тронуты',
+                  code4 == 1 and io.open(os.path.join(text, 'text.xml'), 'rb').read() == orig)
+        except Exception as e:                                              # noqa: BLE001
+            return 'ПРОПУСК: wine не дал прогнать (%s: %s)' % (type(e).__name__, str(e)[:70])
+        bad = [n for n, ok in checks if not ok]
+        msg = 'cmd.exe(Wine): %d/%d' % (len(checks) - len(bad), len(checks))
+        assert not bad, 'живой cmd.exe: провалено %s' % '; '.join(bad)
+        return msg + '; for /d не эмулируется Wine — покрыто симуляциями'
 
 
 # ---------------------------------------------------------------------- runner
