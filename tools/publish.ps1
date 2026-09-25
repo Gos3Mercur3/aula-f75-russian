@@ -77,6 +77,7 @@ catch {
 }
 
 # ---------- какие файлы берём ------------------------------------------------
+$script:SkippedWf = 0
 function Collect([string[]]$patterns) {
     $out = New-Object System.Collections.Generic.List[object]
     foreach ($p in $patterns) {
@@ -86,6 +87,10 @@ function Collect([string[]]$patterns) {
             Get-ChildItem -LiteralPath $full -Recurse -File | ForEach-Object {
                 $rel = $_.FullName.Substring($Root.Length + 1).Replace('\', '/')
                 if ($rel -match 'text_en_reference\.xml$' -or $rel -match '__pycache__') { return }
+                # fine-grained токен не имеет права писать в .github/workflows/ (scope
+                # `workflow` бывает только у классического PAT). GitHub на такое отвечает
+                # 403 на всё дерево, поэтому вырезаем заранее и говорим об этом.
+                if ($rel -match '^\.github/workflows/') { $script:SkippedWf++; return }
                 $out.Add([pscustomobject]@{ Path = $rel; File = $_.FullName })
             }
         } else {
@@ -95,6 +100,10 @@ function Collect([string[]]$patterns) {
     return $out
 }
 $files = Collect $Include
+if ($script:SkippedWf -gt 0) {
+    Write-Host ("пропущено .github/workflows/* : {0} шт. — fine-grained токен не может их писать" -f $script:SkippedWf) -ForegroundColor Yellow
+    Write-Host "  (или заведите классический PAT со scope workflow, или правьте workflow в веб-редакторе GitHub)" -ForegroundColor DarkGray
+}
 if (-not $files -or $files.Count -eq 0) { throw "нечего отправлять — проверьте -Include" }
 Write-Host ("`n[3/6] файлов к отправке: {0}" -f $files.Count) -ForegroundColor Cyan
 foreach ($f in $files) { Write-Host ("   {0,8}  {1}" -f (Get-Item -LiteralPath $f.File).Length, $f.Path) }
